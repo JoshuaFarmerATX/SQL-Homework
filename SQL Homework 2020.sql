@@ -140,10 +140,16 @@ LIMIT 5;
 
 -- 8a. In your new role as an executive, you would like to have an easy way of viewing the Top five genres by gross revenue. Use the solution from the problem above to create a view. If you haven't solved 7h, you can substitute another query to create a view.
 CREATE VIEW top_five_genres AS
-SELECT name, SUM(total) as total FROM category_db
-GROUP BY name
+SELECT c.name, SUM(p.amount) AS total FROM category c
+INNER JOIN film_category USING (category_id)
+INNER JOIN inventory USING (film_id)
+INNER JOIN rental USING (inventory_id)
+INNER JOIN payment p USING (rental_id)
+GROUP BY c.name
 ORDER BY total DESC
 LIMIT 5;
+
+SELECT * FROM top_five_genres;
 
 -- 8b. How would you display the view that you created in 8a?
 SELECT * FROM top_five_genres;
